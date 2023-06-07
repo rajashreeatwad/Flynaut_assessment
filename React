@@ -1,0 +1,169 @@
+import React from 'react';
+
+// Class component example
+class ClassComponent extends React.Component {
+  render() {
+    return <h1>Hello, I'm a class component!</h1>;
+  }
+}
+
+// Function component example with TypeScript
+interface FunctionComponentProps {
+  name: string;
+}
+
+const FunctionComponent: React.FC<FunctionComponentProps> = ({ name }) => {
+  return <h1>Hello, {name}! I'm a function component.</h1>;
+};
+
+export default function App() {
+  return (
+    <div>
+      <ClassComponent />
+      <FunctionComponent name="John" />
+    </div>
+  );
+}
+import React, { useState } from 'react';
+
+const Counter: React.FC = () => {
+  const [count, setCount] = useState(0);
+
+  // Update count
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <h1>Counter: {count}</h1>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+};
+
+export default function App() {
+  return <Counter />;
+}
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+
+// Custom context
+const MyContext = React.createContext('');
+
+const ExampleComponent: React.FC = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // Perform side effects (e.g., API calls) when count changes
+    console.log('Count changed:', count);
+  }, [count]);
+
+  const increment = useCallback(() => {
+    setCount((prevCount) => prevCount + 1);
+  }, []);
+
+  const value = useContext(MyContext);
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={increment}>Increment</button>
+      <p>Context Value: {value}</p>
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <MyContext.Provider value="Hello from Context">
+      <ExampleComponent />
+    </MyContext.Provider>
+  );
+}
+
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
+
+const SocketComponent: React.FC = () => {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    // Listen for 'message' event from the server
+    socket.on('message', (data) => {
+      setMessage(data);
+    });
+
+    return () => {
+      // Clean up the socket connection
+      socket.disconnect();
+    };
+  }, []);
+
+  return <h1>Message from server: {message}</h1>;
+};
+
+export default function App() {
+  return <SocketComponent />;
+}
+import React, { useRef } from 'react';
+
+const ScrollDiv: React.FC = () => {
+  const divRef = useRef<HTMLDivElement>(null);
+
+  const scrollToDiv = () => {
+    divRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div>
+      <button onClick={scrollToDiv}>Scroll to Div</button>
+      <div ref={divRef}>This is the div
+ParentComponent.js:
+
+import React, { useState } from 'react';
+import ChildComponent from './ChildComponent';
+
+const ParentComponent = () => {
+  const [data, setData] = useState('');
+
+  const handleDataChange = (newData) => {
+    setData(newData);
+  };
+
+  return (
+    <div>
+      <h1>Parent Component</h1>
+      <ChildComponent onDataChanged={handleDataChange} />
+      <p>Data received from child component: {data}</p>
+    </div>
+  );
+};
+export default ParentComponent;
+
+ChildComponent.js:
+
+import React from 'react';
+
+const ChildComponent = ({ onDataChanged }) => {
+  const sendDataToParent = () => {
+    const newData = 'Hello from Child';
+    onDataChanged(newData);
+  };
+
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <button onClick={sendDataToParent}>Send Data to Parent</button>
+    </div>
+  );
+};
+
+export default ChildComponent;
+
+
+
+
+
+
