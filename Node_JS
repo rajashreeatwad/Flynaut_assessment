@@ -29,3 +29,186 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 app.listen(3000, function() {
   console.log('Server is running on port 3000');
 });
+
+// Install required packages: npm install jsonwebtoken
+
+const express = require('express');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+
+app.use(function(req, res, next) {
+  // Check if the request contains a valid token
+  const token = req.headers.authorization;
+
+  if (token) {
+    jwt.verify(token, 'secret', function(err, decoded) {
+      if (err) {
+        // Invalid token
+        return res.status(401).json({ message: 'Invalid token' });
+      } else {
+        // Valid token, proceed with the request
+        next();
+      }
+    });
+  } else {
+    // No token provided
+    return res.status(401).json({ message: 'No token provided' });
+  }
+});
+
+// Protected route
+app.get('/protected', function(req, res) {
+  res.send('Protected route');
+});
+
+app.listen(3000, function() {
+  console.log('Server is running on port 3000');
+});
+
+const promise1 = new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    resolve('Promise 1 resolved');
+  }, 2000);
+});
+
+const promise2 = new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    resolve('Promise 2 resolved');
+  }, 1000);
+});
+
+const promise3 = new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    reject('Promise 3 rejected');
+  }, 1500);
+});
+
+Promise.all([promise1, promise2])
+  .then(function(results) {
+    console.log(results); // Output: ['Promise 1 resolved', 'Promise 2 resolved']
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+
+Promise.all([promise1, promise3])
+  .then(function(results) {
+    console.log(results);
+  })
+  .catch(function(error) {
+    console.log(error); // Output: 'Promise 3 rejected'
+  });
+// Assuming you have a "users" collection and a "orders" collection
+
+const mongoose = require('mongoose');
+
+// Define the schemas
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String
+});
+
+const orderSchema = new mongoose.Schema({
+  userId: mongoose.Schema.Types.ObjectId,
+  total: Number
+});
+
+// Define the models
+const User = mongoose.model('User', userSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+// Perform the aggregate lookup
+Order.aggregate([
+  {
+    $lookup: {
+      from: 'users',
+      
+    const mongoose = require('mongoose');
+
+// Define the schemas
+const authorSchema = new mongoose.Schema({
+  name: String
+});
+
+const bookSchema = new mongoose.Schema({
+  title: String,
+  authors: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author'
+  }]
+});
+
+// Define the models
+const Author = mongoose.model('Author', authorSchema);
+const Book = mongoose.model('Book', bookSchema);
+
+// Populate the authors field in a book document
+Book.findOne({ title: 'The Great Gatsby' })
+  .populate('authors')
+  .exec(function(err, book) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(book);
+    }
+  });
+// Install required packages: npm install socket.io
+
+const http = require('http');
+const socketIO = require('socket.io');
+
+const server = http.createServer();
+const io = socketIO(server);
+
+io.on('connection', function(socket) {
+  console.log('Socket connected:', socket.id);
+
+  // Emit an event to the connected socket
+  socket.emit('message', 'Hello, client!');
+
+  // Listen for an event from the connected socket
+  socket.on('reply', function(data) {
+    console.log('Client replied:', data);
+  });
+
+  // Disconnect event
+  socket.on('disconnect', function() {
+    console.log('Socket disconnected:', socket.id);
+  });
+});
+
+server.listen(3000, function() {
+  console.log('Socket server is running on port 3000');
+});
+
+const mongoose = require('mongoose');
+
+// Define the schema
+const userSchema = new mongoose.Schema({
+  name: { type: String, index: true },
+  email: { type: String, unique: true },
+  age: Number
+});
+
+// Create the model
+const User = mongoose.model('User', userSchema);
+
+// Create an index on the name field
+User.collection.createIndex({ name: 1 }, function(err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Index created on name field');
+  }
+});
+
+// Create a unique index on the email field
+User.collection.createIndex({ email: 1 }, { unique: true }, function(err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Unique index created on email field');
+  }
+});
+
